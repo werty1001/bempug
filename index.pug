@@ -1,0 +1,221 @@
+//- bempug by werty1001 [yoobe.ru]
+
+
+//- Settings
+
+- const BEMPUG = { modifier: '--', element:  '__' }
+
+
+//- Element mixin
+
+mixin e( name, data, tag )
+
+	- var data = ( typeof data === 'object' && ! Array.isArray( data ) ) ? data : {m: data}
+	- data.onlyElement = true
+
+	+b( name, data, tag )&attributes(attributes): block
+
+
+//- Block mixin
+
+mixin b( name, data, tag )
+
+
+	//- Start JS
+	-
+
+		// Add global array
+
+		if ( ! Array.isArray( BEMPUG.data ) ) BEMPUG.data = [];
+
+
+		// Data
+
+		var data = ( typeof data === 'object' && ! Array.isArray( data ) ) ? data : {m: data};
+
+
+		// Block
+
+		var _block = { sep: {}, classes: [], parent: {}, onlyElement: !!data.onlyElement,
+
+			pushClass: function( className ) {
+
+				this.classes.push( className );
+			},
+
+			addModifier: function( array, name ) {
+
+				var array = Array.isArray( array ) ? array : ( array ? [array] : [] );
+
+				if ( array.length > 0 ) {
+
+					var _this = this;
+
+					array.forEach( function( item ) {
+
+						if ( item && typeof item === 'string' ) _this.pushClass( name + _this.sep.modifier + item );
+
+					});
+
+				}
+			},
+
+			setSeparators: function( sep ) {
+
+				var separators = ( sep && typeof sep === 'string' ) ? sep : '';
+
+					this.sep.modifier = separators.split( '|' )[0] || BEMPUG.modifier;
+					this.sep.element  = separators.split( '|' )[1] || BEMPUG.element;
+			},
+
+			setParent: function( data ) {
+
+				var parent = ( data && typeof data === 'string' ) ? data : '';
+
+					this.parent.name = parent.split( '|' )[0] || '';
+					this.parent.tag  = parent.split( '|' )[1] || '';
+			},
+
+			setTag: function( tag, parent ) {
+
+				var defaultTag = 'div';
+
+				if ( parent ) {
+
+					if ( ['abbr','a','b','bdo','cite','dfn','em','i','kbd','q','s','span','sub','sup','samp','small','strong','u','var','mark','p','h1','h2','h3','h4','h5','h6','time','bdi','button'].indexOf( parent.tag ) !== -1 ) defaultTag = 'span';
+
+					if ( ['ul','ol'].indexOf( parent.tag ) !== -1 ) defaultTag = 'li';
+
+					if ( parent.tag === 'select' ) defaultTag = 'option';
+
+					if ( parent.tag === 'dl' ) defaultTag = 'dd';
+
+				}
+
+				this.tag = ( tag && typeof tag === 'string' ) ? tag.toLowerCase() : defaultTag;
+			},
+
+			setName: function( name, elementData ) {
+
+				if ( this.onlyElement ) {
+
+					var name = ( name && typeof name === 'string' ) ? name : 'element';
+					var elementData = elementData || true;
+
+				} else {
+
+					var name = ( name && typeof name === 'string' ) ? name : 'block';
+					var elementData = elementData || false;
+
+				}
+
+				var array = Array.isArray( elementData ) ? elementData : [elementData];
+
+
+				if ( Array.isArray( array ) && array.length > 0 ) {
+
+					var _this = this;
+
+					array.forEach( function( item, index ) {
+
+						var elementOf, elementName;
+
+						if ( item === true || item === 1 ) {
+
+							elementOf = _this.parent.name || 'undefined';
+							elementName = name;
+
+						}
+
+						if ( item && typeof item === 'string' ) {
+
+							elementOf = item.split( '|' )[0];
+							elementName = item.split( '|' )[1] || name;
+
+						}
+
+						if ( index === 0 ) {
+
+							if ( _this.onlyElement ) {
+
+								_this.name = elementOf + _this.sep.element + elementName;
+								_this.elementName = '';
+								_this.pushClass( _this.name );
+
+							} else {
+
+								_this.name = name;
+								_this.pushClass( _this.name );
+
+								if ( elementOf && elementName ) {
+									_this.elementName = elementOf + _this.sep.element + elementName;
+									_this.pushClass( _this.elementName );
+								}
+
+							}
+
+						} else {
+
+							if ( elementOf && elementName ) _this.pushClass( elementOf + _this.sep.element + elementName );
+						}
+
+					});
+
+				}
+			}
+		};
+
+
+		// Set separators
+
+		_block.setSeparators( data.sep );
+
+
+		// Set parent
+
+		_block.setParent( BEMPUG.data[ BEMPUG.data.length - 1 ] );
+
+
+		// Set tag
+
+		_block.setTag( tag, _block.parent );
+
+
+		// Set name
+
+		_block.setName( name, data.e );
+
+
+		// Add modifier classes
+
+		_block.addModifier( data.m, _block.name );
+
+
+		// Add element modifier classes if block have mix
+
+		if ( data.em && _block.elementName && ! _block.onlyElement ) _block.addModifier( data.em, _block.elementName );
+
+
+		// Add block data
+
+		if ( ! _block.onlyElement ) BEMPUG.data[ BEMPUG.data.length ] = _block.name + '|' + _block.tag;
+
+
+	//- end JS
+
+
+	//- Output
+
+	if ['img','input','hr','br','wbr','source','area','col','colgroup'].indexOf( _block.tag ) !== -1
+
+		#{_block.tag}(class=_block.classes)&attributes(attributes)/
+
+	else
+
+		#{_block.tag}(class=_block.classes)&attributes(attributes): block
+
+
+	//- Delete block data
+
+	- if ( ! _block.onlyElement ) BEMPUG.data.pop();
+

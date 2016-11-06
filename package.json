@@ -1,0 +1,19 @@
+{
+  "name": "bempug",
+  "version": "0.1.0",
+  "description": "Pug mixins for BEM",
+  "main": "index.pug",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/werty1001/bempug.git"
+  },
+  "author": "werty1001",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/werty1001/bempug/issues"
+  },
+  "homepage": "https://github.com/werty1001/bempug#readme"
+}

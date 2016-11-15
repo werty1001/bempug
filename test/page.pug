@@ -1,0 +1,280 @@
+
+include ../index
+
+- BEMPUG.modifier = '--';
+- BEMPUG.element = '__';
+- BEMPUG.tagByName = {page: 'body', mylist: 'ul'};
+
+- var n = '\n'
+
+doctype
++b('html', 'no-js', 'html')(lang='en')
+	head
+		meta(charset='utf-8')
+		meta(http-equiv='X-UA-Compatible' content='IE=edge')
+		meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+
+		= n
+
+		title Test page
+		meta(name='description' content='This HTML code compiled from Pug.')
+
+
+	+b('page', 'test')
+
+
+		= n + n
+		// Simple example 
+
+		+b('block')
+			+e('text') Element text
+
+
+		= n + n
+		// Element depends on parent block, but you can set it directly 
+
+		+b('block')
+			+e('text') Element text
+			+e('text', {p: 'content'}) Element text
+
+
+		= n + n
+		// Block and element have modifier 
+
+		+b('alert', 'success')
+			+e('text', 'bolder') Success
+
+
+		= n + n
+		// Block and element have many modifiers 
+
+		+b('alert', 'success.active')
+			+e('text', 'bolder.italic') Success text
+
+
+		= n + n
+		// When block is mixed with element or another block 
+
+		+b('alert', {m: 'success.active', e: 'content'}) Success
+
+
+		= n + n
+		// Default tag is div, but you can set it directly 
+
+		+b('news', {}, 'article')
+			+e('title', {}, 'h1') Title
+
+
+		= n + n
+		// Sometimes mixin can be smart and tag depends on parent block or attributes 
+
+		+b('list', {}, 'ul')
+			+e('item') My item 1
+			+e('item') My item 2
+			+e('item') My item 3
+
+		= n
+
+		+b('link')(href='https://www.npmjs.com/package/bempug')
+			+b('text') My text
+
+
+		= n + n
+		// Block is mixed with element 
+
+		+b('title', {e: 'article'}, 'h1') Title
+
+
+		= n + n
+		// You can set name of element in mix with two dots 
+
+		+b('title', {e: 'article:my-name'}, 'h1') Title
+
+
+		= n + n
+		// Block is mixed with two elements 
+
+		+b('title', {e: ['article', 'content']}, 'h1') Title
+
+
+		= n + n
+		// Block is mixed with element of parent block 
+
+		+b('news')
+			+b('title', {e: true}, 'h1') Title
+
+
+		= n + n
+		// Block is mixed with element which has modifiers 
+
+		+b('title', {e: 'article|big.bold'}, 'h1') Title
+
+
+		= n + n
+		// Block is mixed with element and contain modifiers for both 
+
+		+b('title', {m: 'center', e: 'article|big.bold'}, 'h1') Title
+
+
+		= n + n
+		// Block is mixed with another block 
+
+		+b('article', {b: 'text'}) Text
+
+
+		= n + n
+		// Block is mixed with another block which has modifiers 
+
+		+b('article', {b: 'text|bold.big'}) Text
+
+
+		= n + n
+		// Block is mixed with two blocks which have modifiers 
+
+		+b('article', {b: ['news|first','text|bold.big']}) Text
+
+
+		= n + n
+		// You can set separators directly 
+
+		+b('title', {e: 'article', m: 'center.big', s: '----|____' }, 'h1') Title
+
+
+
+		= n + n
+		// Self closing tags 
+
+		+b('image','','img')
+
+		= n
+
+		+b('form')
+			+e('field','','input')
+
+
+
+		= n + n
+		// Crash test 
+
+		+b(' block ',' mod ',' div ')
+			+e(' el ',' mod ',' div ') With space
+
+		= n
+
+		+b(0,{m: ' big . small   ', e: [' page |  ', ' content : test | active   '], b: ' text | bold .    small ' },0)
+			+e(0,{m: ' big . small . bold  ', p: ' content     '},0)
+
+		= n
+
+		+b
+			+e Without anything
+
+		= n
+
+		+b([],[],[])
+			+e([],[],[]) []
+
+		= n
+
+		+b({},{},{})
+			+e({},{},{}) {}
+
+		= n
+
+		+b('','','')
+			+e('','','') ('')
+
+		= n
+
+		+b(' ',' ',' ')
+			+e(' ',' ',' ') (' ')
+
+		= n
+
+		+b(null,null,null)
+			+e(null,null,null) null
+
+		= n
+
+		+b(false,false,false)
+			+e(false,false,false) false
+
+		= n
+
+		+b(true,true,true)
+			+e(true,true,true) true
+
+		= n
+
+		+b(1,1,1)
+			+e(1,1,1) 1
+
+		= n
+
+		+b(0,0,0)
+			+e(0,0,0) 0
+
+		= n
+
+		+b(0,{m: [], p: [], e: [], b: [], s: [] },0)
+			+e(0,{m: [], p: [], e: [], b: [], s: [] },0) {[]}
+
+		= n
+
+		+b(0,{m: {}, p: {}, e: {}, b: {}, s: {} },0)
+			+e(0,{m: {}, p: {}, e: {}, b: {}, s: {} },0) {{}}
+
+		= n
+
+		+b(0,{m: 0, p: 0, e: 0, b: 0, s: 0 },0)
+			+e(0,{m: 0, p: 0, e: 0, b: 0, s: 0 },0) {0}
+
+		= n
+
+		+b(0,{m: 1, p: 1, e: 1, b: 1, s: 1 },0)
+			+e(0,{m: 1, p: 1, e: 1, b: 1, s: 1 },0) {1}
+
+		= n
+
+		+b(0,{m: null, p: null, e: null, b: null, s: null },0)
+			+e(0,{m: null, p: null, e: null, b: null, s: null },0) {null}
+
+		= n
+
+		+b(0,{m: false, p: false, e: false, b: false, s: false },0)
+			+e(0,{m: false, p: false, e: false, b: false, s: false },0) {false}
+
+		= n
+
+		+b(0,{m: true, p: true, e: true, b: true, s: true },0)
+			+e(0,{m: true, p: true, e: true, b: true, s: true },0) {true}
+
+
+		= n
+
+		+b(0,{m: '', p: '', e: '', b: '', s: '' },0)
+			+e(0,{m: '', p: '', e: '', b: '', s: '' },0) {''}
+
+
+		= n
+
+		+b(0,{m: ' ', p: ' ', e: ' ', b: ' ', s: ' ' },0)
+			+e(0,{m: ' ', p: ' ', e: ' ', b: ' ', s: ' ' },0) {' '}
+
+
+
+
+		= n + n
+		// Change separators 
+
+		- BEMPUG.modifier = '_';
+		- BEMPUG.element = '__';
+
+		+b('mylist')
+			+e('item', 'first') First element
+			+e('item', 'second') Second element
+
+
+		= n + n
+
+

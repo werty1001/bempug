@@ -1,7 +1,13 @@
 {
   "name": "bempug",
-  "version": "0.1.0",
-  "description": "Pug mixins for BEM",
+  "version": "1.0.0",
+  "description": "Some pug (jade) mixins for BEM",
+  "keywords": [
+    "pug",
+    "jade",
+    "bem",
+    "mixins"
+  ],
   "main": "index.pug",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

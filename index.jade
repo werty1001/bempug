@@ -220,7 +220,7 @@ mixin b( name, data, tag )
 
 	if ['img','input','hr','br','wbr','source','area','col','colgroup'].indexOf( _block.tag ) !== -1
 
-		#{_block.tag}(class=_block.classes)&attributes(attributes)/
+		#{_block.tag}(class=_block.classes)/&attributes(attributes)
 
 	else
 

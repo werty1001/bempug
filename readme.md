@@ -1,156 +1,277 @@
 [BEM]: https://en.bem.info/
-[Pug]: https://pugjs.org/
-[original idea]: https://github.com/kizu/bemto
+[pug]: https://pugjs.org/
 
-# BemPug — some [Pug][] mixins for writing code on [BEM][] methodology
-Many thanks to Roman Komarov for the [original idea][].
+# BemPug — some pug (jade) mixins for BEM
 
-### Anchors
-[Install](#1-install) | [Mixins](#2-mixins) | [Use](#3-use) | [Settings](#4-settings)
+Simple mixins to help you writing code on [BEM][] methodology in [pug][] (jade) projects.
 
-## 1. Install
+[![NPM](https://nodei.co/npm/bempug.png?downloads=true&stars=true)](https://www.npmjs.com/package/bempug)
+
+#### Anchors
+[Install](#install) | [Mixins](#mixins) | [Examples](#examples) | [Settings](#global-settings)
+
+## Install
 
 Install from npm:
-
 ```Pug
 npm i bempug --save-dev
 ```
-Then include `index.pug` file to your project:
+Then include `index` file to your pug/jade project:
 ```Pug
 include ../../node_modules/bempug/index
 ```
 
-## 2. Mixins
+## Mixins
 
 ```Pug
-//- Block
-mixin b(name, data, tag) 
+//- Block mixin
++b(name, data, tag) 
 
-//- Element
-mixin e(name, data, tag)
+//- Element mixin
++e(name, data, tag)
 ```
-|  Mixin argument  | Valid type  |
-|---|---|
-| name | string  |
-| data | string / array / object |
-| tag  | string  |
+- **name** (String)
+- **data** (String or Object)
+  - **data.m** (String) — [block/element modifier]
+  - **data.p** (String) — [parent of element]
+  - **data.e** (Array or String or Boolean) — [mix block with element]
+  - **data.b** (Array or String) — [mix block with another blocks]
+  - **data.s** (String) — [block/element separators]
+- **tag** (String)
 
-If data argument is string or array it will be modifier, also data can be object:
+> If data argument is String it will be modifier.
+
+## Examples
+[Element](#element) | [Modifier](#modifier) | [Tag](#tag) | [Mix with element](#mix-with-element) | [Mix blocks](#mix-blocks) | [Separators](#separators)
+
+Simple example:
 ```Pug
-{m: 'modifier', e: 'element', em: 'element_modifier'  }
++b('block')
+    +e('text') Element text
 ```
-- data.m (array or string) for modifiers
-- data.e (array or string or bool) for mix block with element
-- data.em (array or string) for element modifiers if block have mix
-
-## 3. Use
-**Simple example:**
-
-```Pug
-+b('myblock')
-  +e('el') Element text
-```
-
-Output:
-
 ```HTML
-<div class="myblock">
-    <div class="myblock__el">Element text</div>
+<div class="block">
+    <div class="block__text">Element text</div>
 </div>
 ```
-**Block and element have modifiers:**
 
+### Element
+
+Element depends on parent block, but you can set it directly:
 ```Pug
-+b('btn', ['big','disabled'], 'button')
-    +e('text', 'bold') Text
++b('block')
+    +e('text') Element text
+    +e('text', {p: 'content'}) Element text
 ```
-
-Output:
-
 ```HTML
-<button class="btn btn--big btn--disabled">
-    <span class="btn__text btn__text--bold">Text</span>
-</button>
+<div class="block">
+    <div class="block__text">Element text</div>
+    <div class="content__text">Element text</div>
+</div>
 ```
 
-**Block and element mix**
+### Modifier
 
+Block and element have modifier:
 ```Pug
-+b('title', {e: 'article'}, 'h1') Title
-
-+b('title', {e: ['article','content']}, 'h2') Title 2
-
-+b('title', {e: 'article|my-title-name'}, 'h3') Title 3
++b('alert', 'success')
+    +e('text', 'bolder') Success
 ```
-
-Output:
-
 ```HTML
-<h1 class="title article__title">Title</h1>
-
-<h2 class="title article__title content__title">Title 2</h2>
-
-<h3 class="title article__my-title-name">Title 3</h3>
+<div class="alert alert--success">
+    <div class="alert__text alert__text--bolder">Success</div>
+</div>
 ```
 
-**Simple nav**
-
+Block and element have many modifiers:
 ```Pug
-+b('nav', {e: 'header'}, 'ul')
-	+e('item')
-		+b( 'link', {e: true}, 'a' ) Link
-	+e('item')
-		+b( 'link', {}, 'a' ) Link
-	+e('item')
-		+b( 'link', {e: true, m: 'with-icon'}, 'a' )
-			+b( 'icon', {e: true} )
-			| Link
++b('alert', 'success.active')
+    +e('text', 'bolder.italic') Success text
+```
+```HTML
+<div class="alert alert--success alert--active">
+    <div class="alert__text alert__text--bolder alert__text--italic">Success text</div>
+</div>
 ```
 
-Output:
-
+When block is mixed with element or another block — you can set main block modifiers in Object:
+```Pug
++b('alert', {m: 'success.active', e: 'content'}) Success
+```
 ```HTML
-<ul class="nav header__nav">
-    <li class="nav__item">
-        <a class="link nav__link">Link</a>
-    </li>
-    <li class="nav__item">
-        <a class="link">Link</a>
-    </li>
-    <li class="nav__item">
-        <a class="link nav__link link--with-icon">
-            <span class="icon link__icon"></span>
-            Link
-        </a>
-    </li>
+<div class="alert alert--success alert--active content__alert">Success</div>
+```
+
+### Tag
+
+Default tag is **div**, but you can set it directly:
+```Pug
++b('news', {}, 'article')
+    +e('title', {}, 'h1') Title
+```
+```HTML
+<article class="news">
+    <h1 class="news__title">Title</h1>
+</article>
+```
+
+Sometimes mixin can be smart and tag depends on parent block or attributes:
+```Pug
++b('list', {}, 'ul')
+    +e('item') My item 1
+    +e('item') My item 2
+    +e('item') My item 3
+```
+```HTML
+<ul class="list">
+    <li class="list__item">My item 1</li>
+    <li class="list__item">My item 2</li>
+    <li class="list__item">My item 3</li>
 </ul>
 ```
-
-**Block and element mix with modifiers:**
-
 ```Pug
-+b('title', {e: 'article', m: ['uppercase','size-xll']}, 'h1') Title
-
-+b('title', {e: ['article','content'], m: 'with-line'}, 'h2') Title 2
-
-+b('title', {e: 'article|my-title', m: 'size-s', em: 'lowercase'}, 'h3') Title 3
++b('link')(href='https://www.npmjs.com/package/bempug')
+    +b('text') My text
 ```
-
-Output:
-
 ```HTML
-<h1 class="title article__title title--uppercase title--size-xll">Title</h1>
+<a class="link" href="https://www.npmjs.com/package/bempug">
+    <span class="text">My text</span>
+</a>
+```
+> Also, you can use [tagByName](#global-settings) global option for set default tag by name.
 
-<h2 class="title article__title content__title title--with-line">Title 2</h2>
+### Mix with element
 
-<h3 class="title article__my-title title--size-s article__my-title--lowercase">Title 3</h3>
-
+Block is mixed with element:
+```Pug
++b('title', {e: 'article'}, 'h1') Title
+```
+```HTML
+<h1 class="title article__title">Title</h1>
 ```
 
-## 4. Settings
-You can change separators, example:
+You can set name of element in mix with colon:
+```Pug
++b('title', {e: 'article:my-name'}, 'h1') Title
+```
+```HTML
+<h1 class="title article__my-name">Title</h1>
+```
+
+Block is mixed with two elements:
+```Pug
++b('title', {e: ['article', 'content']}, 'h1') Title
+```
+```HTML
+<h1 class="title article__title content__title">Title</h1>
+```
+
+Block is mixed with element of parent block:
+```Pug
++b('news')
+    +b('title', {e: true}, 'h1') Title
+```
+```HTML
+<div class="news">
+    <h1 class="title news__title">Title</h1>
+</div>
+```
+
+Block is mixed with element which has modifiers:
+```Pug
++b('title', {e: 'article|big.bold'}, 'h1') Title
+```
+```HTML
+<h1 class="title article__title article__title--big article__title--bold">Title</h1>
+```
+
+Block is mixed with element and contain modifiers for both:
+```Pug
++b('title', {m: 'center', e: 'article|big.bold'}, 'h1') Title
+```
+```HTML
+<h1 class="title title--center article__title article__title--big article__title--bold">Title</h1>
+```
+
+### Mix blocks
+
+Block is mixed with another block:
+```Pug
++b('article', {b: 'text'}) Text
+```
+```HTML
+<div class="article text">Text</div>
+```
+
+Block is mixed with another block which has modifiers:
+```Pug
++b('article', {b: 'text|bold.big'}) Text
+```
+```HTML
+<div class="article text text--bold text--big">Text</div>
+```
+
+Block is mixed with two blocks which have modifiers:
+```Pug
++b('article', {b: ['news|first','text|bold.big']}) Text
+```
+```HTML
+<div class="article news news--first text text--bold text--big">Text</div>
+```
+
+### Separators
+
+You can set separators directly for ignore global settings:
+```Pug
++b('title', {e: 'article', m: 'center.big', s: '----|____' }, 'h1') Title
+```
+```HTML
+<h1 class="title title----center title----big article____title">Title</h1>
+```
+
+## Global settings
+You can change **separators** and set **tagByName** option, example:
 
 ```Pug
-- BEMPUG.modifier = '--';
+include ../../node_modules/bempug/index
+
+- BEMPUG.modifier = '_';
 - BEMPUG.element = '__';
+- BEMPUG.tagByName = {page: 'body', mylist: 'ul'};
+
+doctype
++b('html', 'no-js', 'html')(lang='en')
+    head
+        meta(charset='utf-8')
+        title Title
+    +b('page', 'test')
+        +b('mylist')
+            +e('item', 'first') First element
+            +e('item', 'second') Second element
+
 ```
+```HTML
+<!DOCTYPE html>
+<html class="html html_no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Test page</title>
+    </head>
+    <body class="page page_test">
+        <ul class="mylist">
+            <li class="mylist__item mylist__item_first">First element</li>
+            <li class="mylist__item mylist__item_second">Second element</li>
+        </ul>
+    </body>
+</html>
+```
+
+## Thanks
+
+[original idea]: https://github.com/kizu/bemto
+Many thanks to Roman Komarov for the [original idea][].
+
+## License
+
+[MIT](LICENSE)
+

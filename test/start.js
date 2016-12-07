@@ -1,15 +1,22 @@
 
 'use strict';
 
-(function(){
+(function() {
+
+	let file = __dirname + '/page.pug';
+
+	let options = {
+		pretty: '\t',
+		doctype: 'html'
+	};
 
 	try {
 
 		var pug = require( 'pug' );
 
-	} catch( e ) {
+	} catch( err ) {
 
-		console.log( 'For test install Pug [ npm i pug --save-dev ] then try again.' );
+		console.log( 'For Pug test you must install module [ npm i pug --save-dev ]' );
 		return;
 
 	}
@@ -18,21 +25,27 @@
 
 		var jade = require( 'jade' );
 
-	} catch( e ) {
+	} catch( err ) {
 
-		console.log( 'For test install Jade [ npm i jade --save-dev ] then try again.' );
+		console.log( 'For Jade test you must install module [ npm i jade --save-dev ]' );
 		return;
 
 	}
 
-	let fs = require( 'fs' );
-	let file = __dirname + '/page.pug';
-	let options = {pretty: '\t', doctype: 'html'};
+	if ( pug ) {
 
-	let PugCompiled = pug.renderFile( file, options );
-	let JadeCompiled = jade.renderFile( file, options );
+		let PugCompiled = pug.renderFile( file, options );
 
-	fs.writeFileSync( __dirname + '/page.pug.html',  PugCompiled +  '<!-- Pug v2.0.0-beta6 -->',  'utf8' );
-	fs.writeFileSync( __dirname + '/page.jade.html', JadeCompiled + '<!-- Jade v1.11.0 -->',      'utf8' );
+		require( 'fs' ).writeFileSync( __dirname + '/page.pug.html',  PugCompiled +  '<!-- Pug v2.0.0-beta6 -->', 'utf8' );
+
+	}
+
+	if ( jade ) {
+
+		let JadeCompiled = jade.renderFile( file, options );
+
+		require( 'fs' ).writeFileSync( __dirname + '/page.jade.html', JadeCompiled + '<!-- Jade v1.11.0 -->', 'utf8' );
+
+	}
 
 })();

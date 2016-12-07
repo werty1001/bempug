@@ -1,14 +1,14 @@
 [BEM]: https://en.bem.info/
 [pug]: https://pugjs.org/
 
-# BemPug — some pug (jade) mixins for BEM
+# BemPug — some pug / jade mixins for BEM
 
-Simple mixins to help you writing code on [BEM][] methodology in [pug][] (jade) projects.
+Simple mixins to help you writing code on [BEM][] methodology in [pug][] / jade projects.
 
 [![NPM](https://nodei.co/npm/bempug.png?downloads=true&stars=true)](https://www.npmjs.com/package/bempug)
 
 #### Anchors
-[Install](#install) | [Mixins](#mixins) | [Examples](#examples) | [Settings](#global-settings)
+[Install](#install) | [Mixins](#mixins) | [Examples](#examples) | [Settings](#global-settings) | [Changelog](#changelog)
 
 ## Install
 
@@ -16,7 +16,7 @@ Install from npm:
 ```Pug
 npm i bempug --save-dev
 ```
-Then include `index` file to your pug/jade project:
+Then include `index` file to your pug / jade project:
 ```Pug
 include ../../node_modules/bempug/index
 ```
@@ -25,24 +25,34 @@ include ../../node_modules/bempug/index
 
 ```Pug
 //- Block mixin
-+b(name, data, tag) 
++b(name, data, tag)
+```
+- **name** (String)
+- **data** (String or Object)
+  - **data.m** (String) — [block modifier]
+  - **data.p** (Boolean) — [disabled parent mode]
+  - **data.e** (Array or String or Boolean) — [mix block with element]
+  - **data.b** (Array or String) — [mix block with another blocks]
+  - **data.s** (String) — [block separators]
+- **tag** (String)
 
+> If data argument is String it will be modifier.
+
+```Pug
 //- Element mixin
 +e(name, data, tag)
 ```
 - **name** (String)
 - **data** (String or Object)
-  - **data.m** (String) — [block/element modifier]
-  - **data.p** (String) — [parent of element]
-  - **data.e** (Array or String or Boolean) — [mix block with element]
-  - **data.b** (Array or String) — [mix block with another blocks]
-  - **data.s** (String) — [block/element separators]
+  - **data.m** (String) — [element modifier]
+  - **data.p** (String) — [element parent]
+  - **data.s** (String) — [element separators]
 - **tag** (String)
 
 > If data argument is String it will be modifier.
 
 ## Examples
-[Element](#element) | [Modifier](#modifier) | [Tag](#tag) | [Mix with element](#mix-with-element) | [Mix blocks](#mix-blocks) | [Separators](#separators)
+[Element](#element) | [Modifier](#modifier) | [Tag](#tag) | [Mix with element](#mix-with-element) | [Mix blocks](#mix-blocks) | [Disable parent](#disable-parent) | [Separators](#separators)
 
 Simple example:
 ```Pug
@@ -219,9 +229,25 @@ Block is mixed with two blocks which have modifiers:
 <div class="article news news--first text text--bold text--big">Text</div>
 ```
 
+### Disable parent
+
+You can disable block parent mode and element will ignore it:
+```Pug
++b('header')
+    +b('grid', {p: false})
+        +e('logo') Logo
+```
+```HTML
+<div class="header">
+    <div class="grid">
+        <div class="header__logo">Logo</div>
+    </div>
+</div>
+```
+
 ### Separators
 
-You can set separators directly for ignore global settings:
+You can set separators directly and ignore global settings:
 ```Pug
 +b('title', {e: 'article', m: 'center.big', s: '----|____' }, 'h1') Title
 ```
@@ -266,6 +292,15 @@ doctype
 </html>
 ```
 
+## Changelog
+```
+// 1.0.1
+- Add: disable parent mode for blocks
+
+// 1.0.0
+- Release version
+```
+
 ## Thanks
 
 [original idea]: https://github.com/kizu/bemto
@@ -274,4 +309,3 @@ Many thanks to Roman Komarov for the [original idea][].
 ## License
 
 [MIT](LICENSE)
-

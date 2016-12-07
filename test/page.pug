@@ -135,6 +135,14 @@ doctype
 
 
 		= n + n
+		// Disable parent 
+
+		+b('header')
+			+b('grid', {p: false})
+				+e('logo') Logo
+
+
+		= n + n
 		// You can set separators directly 
 
 		+b('title', {e: 'article', m: 'center.big', s: '----|____' }, 'h1') Title

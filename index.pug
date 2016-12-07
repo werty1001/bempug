@@ -211,7 +211,7 @@ mixin b( name, data, tag )
 
 			// Add block data
 
-			BEMPUG.data[ BEMPUG.data.length ] = _block.name + '|' + _block.tag;
+			if ( _data.p !== false ) BEMPUG.data[ BEMPUG.data.length ] = _block.name + '|' + _block.tag;
 
 		} 
 
@@ -229,5 +229,5 @@ mixin b( name, data, tag )
 
 	//- Delete block data
 
-	- if ( ! _block.onlyElement ) BEMPUG.data.pop();
+	- if ( ! _block.onlyElement && _data.p !== false ) BEMPUG.data.pop();
 

@@ -156,7 +156,7 @@ Sometimes mixin can be smart and tag depends on parent or attributes:
     <span class="text">My text</span>
 </a>
 ```
-> Also, you can use [tagByName](#bempug-tagbyname) global option for set default tag by name.
+> Also, you can use [tagByName](#bempugtagbyname) global option for set default tag by name.
 
 ### Mix with element
 
@@ -270,7 +270,7 @@ You can set separators directly and ignore global settings (modifier|element):
 ```
 
 ## Global settings
-[Get current block](#bempug-getcurrentblock) | [Get current parent](#bempug-getcurrentparent) | [Set modifier separator](#bempug-modifier) | [Set element separator](#bempug-element) | [Set tag by name](#bempug-tagbyname) | [Before parse callback](#bempug-beforeparse) | [After parse callback](#bempug-afterparse)
+[Get current block](#bempuggetcurrentblock) | [Get current parent](#bempuggetcurrentparent) | [Set modifier separator](#bempugmodifier) | [Set element separator](#bempugelement) | [Set tag by name](#bempugtagbyname) | [Before parse callback](#bempugbeforeparse) | [After parse callback](#bempugafterparse)
 
 #### BEMPUG.getCurrentBlock
 You can get current block name:

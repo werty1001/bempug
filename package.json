@@ -1,6 +1,6 @@
 {
   "name": "bempug",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Some pug / jade mixins for BEM",
   "keywords": [
     "pug",

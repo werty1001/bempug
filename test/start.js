@@ -17,7 +17,6 @@
 	} catch( err ) {
 
 		console.log( 'For Pug test you must install module [ npm i pug --save-dev ]' );
-		return;
 
 	}
 
@@ -28,7 +27,6 @@
 	} catch( err ) {
 
 		console.log( 'For Jade test you must install module [ npm i jade --save-dev ]' );
-		return;
 
 	}
 

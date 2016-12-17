@@ -1,0 +1,215 @@
+-
+	const BEMPUG = {
+
+		// bempug by werty1001 [yoobe.ru]
+
+		version: '1.0.2',
+
+		tree: [],
+
+		blocks: [],
+
+		tagByName: {},
+
+		beforeParse: {},
+
+		afterParse: {},
+
+		tagByAttr: { href: 'a', alt: 'img', for: 'label' },
+
+		selfClosingTags: ['img','input','hr','br','wbr','source','area','col','colgroup'],
+
+		forSpanTags: ['abbr','a','b','bdo','cite','dfn','em','i','kbd','q','s','span','sub','sup','samp','small','strong','u','var','mark','p','h1','h2','h3','h4','h5','h6','time','bdi','button','li','label'],
+
+		isObject: function( obj ) {
+			return ( typeof obj === 'object' && obj !== null && ! Array.isArray( obj ) ) ? true : false;
+		},
+
+		isString: function( str ) {
+			return ( str && typeof str === 'string' && !!str.trim() ) ? true : false;
+		},
+
+		getCurrentBlock: function() {
+			return this.blocks[ this.blocks.length - 1 ] || '';
+		},
+
+		getCurrentParent: function() {
+			return this.tree[ this.tree.length - 1 ] || {};
+		},
+
+		addData: function( block ) {
+			if ( block.type === 'block' ) this.blocks[ this.blocks.length ] = block.name;
+			this.tree[ this.tree.length ] = block;
+		},
+
+		removeData: function( block ) {
+			if ( block.type === 'block' ) this.blocks.pop();
+			this.tree.pop();
+		},
+
+		blockProto: {
+
+			setName: function( name, parent ) {
+
+				var blockName = BEMPUG.isString( name ) ? name.trim() : false,
+					parentName = BEMPUG.isString( parent ) ? parent.trim() : ( BEMPUG.getCurrentBlock() + '' );
+
+					if ( this.type === 'element' )
+						blockName = parentName + this.sep.element + ( blockName || 'element' );
+
+					this.name = ( blockName || 'block' );
+					this.classes.push( this.name );
+
+					return this;
+			},
+
+			identifyTag: function( tag, name, attr ) {
+
+				if ( BEMPUG.isString( tag ) ) return this.setTag( tag );
+
+				if ( name && BEMPUG.isString( BEMPUG.tagByName[ name ] ) ) {
+
+					return this.setTag( BEMPUG.tagByName[ name ] );
+				}
+
+				if ( attr.href || attr.alt || attr.for ) {
+
+					var attribute = attr.href ? 'href' : ( attr.alt ? 'alt' : 'for' );
+
+					return this.setTag( BEMPUG.tagByAttr[ attribute ] );
+				}
+
+				if ( this.parent.tag && this.parent.tag !== 'div' ) {
+
+					if ( this.parent.tag === 'select' ) return this.setTag( 'option' );
+
+					if ( this.parent.tag === 'dl' ) return this.setTag( 'dd' );
+
+					if ( ['ul','ol'].indexOf( this.parent.tag ) !== -1 ) return this.setTag( 'li' );
+
+					if ( BEMPUG.forSpanTags.indexOf( this.parent.tag ) !== -1 ) return this.setTag( 'span' );
+				}
+
+				return this.setTag( 'div' );
+
+			},
+
+			setTag: function( tag ) {
+
+				if ( tag ) this.tag = tag.trim().toLowerCase();
+
+				this.selfClosing = ( BEMPUG.selfClosingTags.indexOf( this.tag ) !== -1 );
+
+				return this;
+
+			},
+
+			setSeparators: function( sep ) {
+
+				var separator = BEMPUG.isString( sep ) ? sep.split( '|' ) : [],
+					modifier  = separator[0] || ( this.parent.sep ? this.parent.sep.modifier : BEMPUG.modifier ),
+					element   = separator[1] || ( this.parent.sep ? this.parent.sep.element  : BEMPUG.element  );
+
+					this.sep.modifier = BEMPUG.isString( modifier ) ? modifier.trim() : '--';
+					this.sep.element  = BEMPUG.isString( element  ) ? element.trim()  : '__';
+
+					return this;
+			},
+
+			addModifier: function( mod, name ) {
+
+				if ( ! BEMPUG.isString( mod ) ) return this;
+
+				mod.split( '.' ).forEach( function( val ) {
+
+					var blockName = BEMPUG.isString( name ) ? name.trim() : this.name,
+						modifier  = BEMPUG.isString( val )  ? val.trim()  : false;
+
+						if ( ! modifier || ! blockName ) return;
+
+						this.classes.push( blockName + this.sep.modifier + modifier );
+
+				}, this);
+
+				return this;
+
+			},
+
+			addMix: function( data, isElementMix ) {
+
+				if ( ! data ) return this;
+
+				var array = Array.isArray( data ) ? data : [ data ];
+
+					array.forEach( function( val ) {
+
+						var mix = ( isElementMix && ( val === true || val === 1 ) ) ? ( BEMPUG.getCurrentBlock() + '' ) : val;
+
+						if ( ! BEMPUG.isString( mix ) ) return;
+
+						var name = mix.split( '|' )[0];
+
+						if ( ! BEMPUG.isString( name ) ) return;
+
+						if ( isElementMix ) {
+
+							var elementOf = name.split( ':' )[0];
+							var elementName = name.split( ':' )[1] || this.name;
+
+							if ( ! ( BEMPUG.isString( elementOf ) && BEMPUG.isString( elementName ) ) ) return;
+
+							name = elementOf.trim() + this.sep.element + elementName.trim();
+						}
+
+						this.classes.push( name.trim() );
+						this.addModifier( mix.split( '|' )[1], name );
+
+					}, this);
+
+				return this;
+
+			}
+
+		},
+
+		Block: function( name, data, tag, attr ) {
+
+			this.__proto__ = BEMPUG.blockProto;
+
+			this.data = BEMPUG.isObject( data ) ? data : {m: data};
+
+			this.type = !!attr.isElement ? 'element' : 'block' + ( this.data.p === false ? 'Off' : '' );
+
+			this.name = name;
+
+			this.tag = this.data.t || tag;
+
+			this.attributes = attr;
+
+			if ( this.type === 'element' ) delete this.attributes.isElement;
+
+			if ( typeof BEMPUG.beforeParse[ name ] === 'function' ) BEMPUG.beforeParse[ name ]( this );
+
+			this.sep = {};
+
+			this.classes = [];
+
+			this.parent = BEMPUG.getCurrentParent();
+
+			this.identifyTag( this.tag, this.name, this.attributes );
+
+			this.setSeparators( this.data.s );
+
+			this.setName( this.name, this.data.p );
+
+			this.addModifier( this.data.m );
+
+			if ( this.type !== 'element' ) this.addMix( this.data.b ).addMix( this.data.e, true );
+
+			delete this.data;
+
+			if ( typeof BEMPUG.afterParse[ name ] === 'function' ) BEMPUG.afterParse[ name ]( this );
+
+		}
+
+	};

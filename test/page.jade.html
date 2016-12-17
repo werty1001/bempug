@@ -1,6 +1,4 @@
-
 <!DOCTYPE html>
-
 <html class="html html--no-js" lang="en">
 	<head>
 		<meta charset="utf-8">
@@ -10,149 +8,124 @@
 		<title>Test page</title>
 		<meta name="description" content="This HTML code compiled from Pug.">
 	</head>
-	
-	<body class="page page--test">
+	<body class="page page--test" itemscope itemtype="http://schema.org/WebPage">
 
 
 		<!-- Simple example -->
-		
 		<div class="block">
-			
 			<div class="block__text">Element text
 			</div>
 		</div>
 
 
 		<!-- Element depends on parent block, but you can set it directly -->
-		
 		<div class="block">
-			
 			<div class="block__text">Element text
 			</div>
-			
 			<div class="content__text">Element text
 			</div>
 		</div>
 
 
 		<!-- Block and element have modifier -->
-		
 		<div class="alert alert--success">
-			
 			<div class="alert__text alert__text--bolder">Success
 			</div>
 		</div>
 
 
 		<!-- Block and element have many modifiers -->
-		
 		<div class="alert alert--success alert--active">
-			
 			<div class="alert__text alert__text--bolder alert__text--italic">Success text
 			</div>
 		</div>
 
 
 		<!-- When block is mixed with element or another block -->
-		
 		<div class="alert alert--success alert--active content__alert">Success
 		</div>
 
 
 		<!-- Default tag is div, but you can set it directly -->
-		
 		<article class="news">
-			
+			<h1 class="news__title">Title
+			</h1>
+		</article>
+
+		<article class="news">
 			<h1 class="news__title">Title
 			</h1>
 		</article>
 
 
 		<!-- Sometimes mixin can be smart and tag depends on parent block or attributes -->
-		
 		<ul class="list">
-			
 			<li class="list__item">My item 1
 			</li>
-			
 			<li class="list__item">My item 2
 			</li>
-			
 			<li class="list__item">My item 3
 			</li>
 		</ul>
 
-		
 		<a class="link" href="https://www.npmjs.com/package/bempug">
-			
 			<span class="text">My text
 			</span>
 		</a>
 
 
 		<!-- Block is mixed with element -->
-		
 		<h1 class="title article__title">Title
 		</h1>
 
 
 		<!-- You can set name of element in mix with two dots -->
-		
 		<h1 class="title article__my-name">Title
 		</h1>
 
 
 		<!-- Block is mixed with two elements -->
-		
 		<h1 class="title article__title content__title">Title
 		</h1>
 
 
 		<!-- Block is mixed with element of parent block -->
-		
 		<div class="news">
-			
-			<h1 class="title news__title">Title
-			</h1>
+			<div class="news__text">
+				<h1 class="title news__title">Title
+				</h1>
+			</div>
 		</div>
 
 
 		<!-- Block is mixed with element which has modifiers -->
-		
 		<h1 class="title article__title article__title--big article__title--bold">Title
 		</h1>
 
 
 		<!-- Block is mixed with element and contain modifiers for both -->
-		
 		<h1 class="title title--center article__title article__title--big article__title--bold">Title
 		</h1>
 
 
 		<!-- Block is mixed with another block -->
-		
 		<div class="article text">Text
 		</div>
 
 
 		<!-- Block is mixed with another block which has modifiers -->
-		
 		<div class="article text text--bold text--big">Text
 		</div>
 
 
 		<!-- Block is mixed with two blocks which have modifiers -->
-		
 		<div class="article news news--first text text--bold text--big">Text
 		</div>
 
 
 		<!-- Disable parent -->
-		
 		<div class="header">
-			
 			<div class="grid">
-				
 				<div class="header__logo">Logo
 				</div>
 			</div>
@@ -160,181 +133,158 @@
 
 
 		<!-- You can set separators directly -->
-		
-		<h1 class="title title----center title----big article____title">Title
-		</h1>
-
-
-		<!-- Self closing tags -->
-		
-		<img class="image">
-
-		
-		<div class="form">
-			
-			<input class="form__field">
+		<div class="article article----first content____article">
+			<div class="text text----bolder article____text">
+				<div class="text____mark">Text
+				</div>
+			</div>
 		</div>
 
 
+		<!-- Self closing tags -->
+		<img class="image">
+		<input class="field">
+
+
+		<!-- Default tag depends on parent tag for any descendant -->
+		<div class="description">
+			<ul class="description__list">
+				<li class="description__item">My item 1
+				</li>
+				<li class="description__item">My item 2
+				</li>
+				<li class="description__item">
+					<span class="description__mark">My mark
+					</span>
+				</li>
+				<li class="description__item">
+					<span class="text">My item 4
+					</span>
+				</li>
+			</ul>
+		</div>
+
+
+		<!-- Before parse callback -->
+		<input class="input input--search">
+		<input class="input input--default">
+
+
+
+
+
+
+
+
+		<!---->
 		<!-- Crash test -->
-		
+		<!---->
+
+
 		<div class="block block--mod">
-			
 			<div class="block__el block__el--mod">With space
 			</div>
 		</div>
 
-		
-		<div class="block block--big block--small page__block content__test content__test--active text text--bold text--small">
-			
+		<div class="block block--big block--small text text--bold text--small page__block content__test content__test--active">
 			<div class="content__element content__element--big content__element--small content__element--bold">
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">Without anything
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">[]
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">{}
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">('')
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">(' ')
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">null
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">false
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">true
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">1
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">0
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">{[]}
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">{{}}
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">{0}
 			</div>
 		</div>
 
-		
 		<div class="block page__block">
-			
 			<div class="block__element">{1}
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">{null}
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="page__element">{false}
 			</div>
 		</div>
 
-		
 		<div class="block page__block">
-			
 			<div class="block__element">{true}
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">{''}
 			</div>
 		</div>
 
-		
 		<div class="block">
-			
 			<div class="block__element">{' '}
 			</div>
 		</div>
-
-
-		<!-- Change separators -->
-		
-		<ul class="mylist">
-			
-			<li class="mylist__item mylist__item_first">First element
-			</li>
-			
-			<li class="mylist__item mylist__item_second">Second element
-			</li>
-		</ul>
 
 
 	</body>

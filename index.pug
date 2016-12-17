@@ -1,233 +1,32 @@
-//- bempug by werty1001 [yoobe.ru]
 
 
-//- Settings
+//- Include core
 
-- const BEMPUG = { data: [], tagByName: {} };
+include core
 
 
 //- Element mixin
 
-mixin e(name, data, tag )
-	+b( name, data, tag )(onlyElement=true)&attributes(attributes): block
+mixin e( name, data, tag )
+
+	+b( name, data, tag )(isElement=true)&attributes(attributes): block
 
 
 //- Block mixin
 
 mixin b( name, data, tag )
-	-
-		var _data = ( typeof data === 'object' && data !== null && ! Array.isArray( data ) ) ? data : {m: data};
 
-		var _block = { sep: {}, classes: [], parent: {}, onlyElement: !!attributes.onlyElement,
+	- var myBlock = new BEMPUG.Block( name, data, tag, attributes );
+	
+	- BEMPUG.addData( myBlock );
 
-			isString: function( str ) {
+	if myBlock.selfClosing
 
-				return ( str && typeof str === 'string' && !!str.trim() ) ? true : false;
-			},
-
-			setSeparators: function( sep ) {
-
-				var separator = this.isString( sep ) ? sep.split( '|' ) : [],
-					modifier  = separator[0] || BEMPUG.modifier,
-					element   = separator[1] || BEMPUG.element;
-
-					this.sep.modifier = this.isString( modifier ) ? modifier.trim() : '--';
-					this.sep.element  = this.isString( element )  ? element.trim()  : '__';
-			},
-
-			setParent: function( data ) {
-
-				var parent = this.isString( data ) ? data.split( '|' ) : [];
-
-					this.parent.name = parent[0] || '';
-					this.parent.tag  = parent[1] || '';
-			},
-
-			setTag: function( tag, name, attr ) {
-
-				if ( this.isString( tag ) ) {
-
-					this.tag = tag.trim().toLowerCase();
-					return;
-				}
-
-				if ( this.isString( name ) && this.isString( BEMPUG.tagByName[ name.trim() ] ) ) {
-
-					this.tag = BEMPUG.tagByName[ name.trim() ].trim().toLowerCase();
-					return;
-				}
-
-				if ( attr.href ) {
-					this.tag = 'a';
-					return;
-				}
-
-				if ( attr.alt ) {
-					this.tag = 'img';
-					return;
-				}
-
-				if ( attr.for ) {
-					this.tag = 'label';
-					return;
-				}
-
-				if ( this.parent.tag && this.parent.tag !== 'div' ) {
-
-					var parentTag = this.parent.tag;
-
-					if ( parentTag === 'select' ) {
-
-						this.tag = 'option';
-						return;
-					}
-
-					if ( parentTag === 'dl' ) {
-
-						this.tag = 'dd';
-						return;
-					}
-
-					if ( ['ul','ol'].indexOf( parentTag ) !== -1 ) {
-
-						this.tag = 'li';
-						return;
-					}
-
-					if ( ['abbr','a','b','bdo','cite','dfn','em','i','kbd','q','s','span','sub','sup','samp','small','strong','u','var','mark','p','h1','h2','h3','h4','h5','h6','time','bdi','button','li','label'].indexOf( parentTag ) !== -1 ) {
-
-						this.tag = 'span';
-						return;
-					}
-
-				}
-
-				this.tag = 'div';
-			},
-
-			setName: function( name, parent ) {
-
-				var blockName = this.isString( name ) ? name.trim() : false,
-					parentName = this.isString( parent ) ? parent.trim() : ( this.parent.name + '' );
-
-					if ( this.onlyElement ) blockName = parentName + this.sep.element + ( blockName || 'element' );
-
-					this.name = ( blockName || 'block' );
-					this.classes.push( this.name );
-			},
-
-			addModifier: function( mod, name ) {
-
-				if ( ! this.isString( mod ) ) return;
-
-				mod.split( '.' ).forEach( function( val ) {
-
-					var blockName = this.isString( name ) ? name.trim() : this.name,
-						modifier  = this.isString( val )  ? val.trim()  : false;
-
-						if ( ! modifier || ! blockName ) return;
-
-						this.classes.push( blockName + this.sep.modifier + modifier );
-
-				}, this);
-
-			},
-
-			addMix: function( data, isElementMix ) {
-
-				if ( ! data ) return;
-
-				var array = Array.isArray( data ) ? data : [data];
-
-					array.forEach( function( val ) {
-
-						var mix = ( isElementMix && ( val === true || val === 1 ) ) ? ( this.parent.name + '' ) : val;
-
-						if ( ! this.isString( mix ) ) return;
-
-						var name = mix.split( '|' )[0];
-
-						if ( ! this.isString( name ) ) return;
-
-						if ( isElementMix ) {
-
-							var elementOf = name.split( ':' )[0];
-							var elementName = name.split( ':' )[1] || this.name;
-
-							if ( ! ( this.isString( elementOf ) && this.isString( elementName ) ) ) return;
-
-							name = elementOf.trim() + this.sep.element + elementName.trim();
-						}
-
-						this.classes.push( name.trim() );
-						this.addModifier( mix.split( '|' )[1], name );
-
-					}, this);
-			}
-
-		};
-
-
-		// Set separators
-
-		_block.setSeparators( _data.s );
-
-
-		// Set parent
-
-		_block.setParent( BEMPUG.data[ BEMPUG.data.length - 1 ] );
-
-
-		// Set tag
-
-		_block.setTag( tag, name, attributes );
-
-
-		// Set name
-
-		_block.setName( name, _data.p );
-
-
-		// Add modifier
-
-		_block.addModifier( _data.m );
-
-
-		if ( _block.onlyElement ) {
-
-			// Unset attribute
-
-			attributes.onlyElement = false;
-
-		} else {
-
-			// Mix block with element
-
-			_block.addMix( _data.e, true );
-
-			// Mix block with another block
-
-			_block.addMix( _data.b );
-
-			// Add block data
-
-			if ( _data.p !== false ) BEMPUG.data[ BEMPUG.data.length ] = _block.name + '|' + _block.tag;
-
-		} 
-
-	//- Output
-
-
-	if ['img','input','hr','br','wbr','source','area','col','colgroup'].indexOf( _block.tag ) !== -1
-
-		#{_block.tag}(class=_block.classes)&attributes(attributes)/
+		#{myBlock.tag}(class=myBlock.classes)&attributes(myBlock.attributes)/
 
 	else
 
-		#{_block.tag}(class=_block.classes)&attributes(attributes): block
+		#{myBlock.tag}(class=myBlock.classes)&attributes(myBlock.attributes): block
 
-
-	//- Delete block data
-
-	- if ( ! _block.onlyElement && _data.p !== false ) BEMPUG.data.pop();
+	- BEMPUG.removeData( myBlock );
 

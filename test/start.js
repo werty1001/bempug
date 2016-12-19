@@ -34,7 +34,17 @@
 
 		let PugCompiled = pug.renderFile( file, options );
 
-		require( 'fs' ).writeFileSync( __dirname + '/page.pug.html',  PugCompiled +  '<!-- Pug v2.0.0-beta6 -->', 'utf8' );
+		let selfClosing = ['img','input','hr','br','wbr','source','area','col','colgroup','meta','link'];
+
+		let fixCompiled = PugCompiled.replace( /\/>/gi, '>' ).replace( /(<[A-Z][A-Z0-9]*\b[^>]*>)([^<>]*)(<\/[A-Z][A-Z0-9]*>)/gi, function(str, start, content, end) {
+
+			let tag = start.replace( /<|>/gi, '' ).split( ' ' )[0];
+
+			return start + ( ( selfClosing.indexOf( tag ) === -1 ) ? content.trim() : content ) + end;
+		});
+
+		require( 'fs' ).writeFileSync( __dirname + '/page.pug.html', PugCompiled + '<!-- Pug v2.0.0-beta6 -->', 'utf8' );
+		require( 'fs' ).writeFileSync( __dirname + '/page.fix.html', fixCompiled + '<!-- Pug v2.0.0-beta6 -->', 'utf8' );
 
 	}
 

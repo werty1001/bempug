@@ -360,7 +360,6 @@ You can get current parent `Object`:
 ```Jade
 +b('html', 'no-js', 'html')(lang='en')
     - console.log( BEMPUG.getCurrentParent() );
-    ...
 ```
 ```JS
 { type: 'block',
@@ -412,13 +411,13 @@ You can set `afterParse` callback:
 
 #### 1.1.0
 > **Add**: support ampersand sign for mix
-> **Add**: support mix element with blocks and another elements
+**Add**: support mix element with blocks and another elements
 
 #### 1.0.2
 > **Add**: some global helpers
-> **Add**: before / after parse callback
-> **Fixed**: block and element separators work for any descendant
-> **Fixed**: default tag depends on parent tag for any descendant
+**Add**: before / after parse callback
+**Fixed**: block and element separators work for any descendant
+**Fixed**: default tag depends on parent tag for any descendant
 
 #### 1.0.1
 > **Add**: disable parent mode for blocks

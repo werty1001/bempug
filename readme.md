@@ -416,9 +416,12 @@ You can set `afterParse` callback:
 
 #### 1.0.2
 > **Add**: some global helpers
+
 > **Add**: before / after parse callback
-**Fixed**: block and element separators work for any descendant
-**Fixed**: default tag depends on parent tag for any descendant
+
+> **Fixed**: block and element separators work for any descendant
+
+> **Fixed**: default tag depends on parent tag for any descendant
 
 #### 1.0.1
 > **Add**: disable parent mode for blocks

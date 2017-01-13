@@ -411,11 +411,12 @@ You can set `afterParse` callback:
 
 #### 1.1.0
 > **Add**: support ampersand sign for mix
-**Add**: support mix element with blocks and another elements
+
+> **Add**: support mix element with blocks and another elements
 
 #### 1.0.2
 > **Add**: some global helpers
-**Add**: before / after parse callback
+> **Add**: before / after parse callback
 **Fixed**: block and element separators work for any descendant
 **Fixed**: default tag depends on parent tag for any descendant
 

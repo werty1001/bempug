@@ -13,16 +13,37 @@
 
 		<!-- Simple example -->
 		<div class="block">
-			<div class="block__text">Element text
+			<div class="block__element">Text
 			</div>
 		</div>
 
 
-		<!-- Element depends on parent block, but you can set it directly -->
-		<div class="block">
-			<div class="block__text">Element text
+		<!-- You can disable parent mode and element will ignore this block -->
+		<div class="header">
+			<div class="grid">
+				<div class="header__logo">Logo
+				</div>
 			</div>
-			<div class="content__text">Element text
+		</div>
+
+		<div class="header">
+			<div class="grid">
+				<div class="header__logo">Logo
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Element depends on parent block -->
+		<div class="content">
+			<div class="content__layout">Content
+			</div>
+		</div>
+
+
+		<!-- You can set element directly -->
+		<div class="content">
+			<div class="page__layout">Content
 			</div>
 		</div>
 
@@ -34,15 +55,15 @@
 		</div>
 
 
-		<!-- Block and element have many modifiers -->
+		<!-- Block and element have more than one modifier -->
 		<div class="alert alert--success alert--active">
-			<div class="alert__text alert__text--bolder alert__text--italic">Success text
+			<div class="alert__text alert__text--bolder alert__text--italic">Success
 			</div>
 		</div>
 
 
-		<!-- When block is mixed with element or another block -->
-		<div class="alert alert--success alert--active content__alert">Success
+		<!-- Also, you can set modifiers in data argument -->
+		<div class="alert alert--success alert--active">Success
 		</div>
 
 
@@ -58,7 +79,7 @@
 		</article>
 
 
-		<!-- Sometimes mixin can be smart and tag depends on parent block or attributes -->
+		<!-- Sometimes mixin can be smart and tag depends on parent or attributes -->
 		<ul class="list">
 			<li class="list__item">My item 1
 			</li>
@@ -74,68 +95,103 @@
 		</a>
 
 
+		<!-- Also, you can use tagByName global option for set default tag by name -->
+		<ul class="list">
+			<li class="list__item">Item
+			</li>
+			<li class="list__item">Item
+			</li>
+		</ul>
+
+		<form class="form">
+			<fieldset class="form__fields">Fields
+			</fieldset>
+		</form>
+
+
 		<!-- Block is mixed with element -->
-		<h1 class="title article__title">Title
-		</h1>
+		<div class="title article__title">Title
+		</div>
 
 
-		<!-- You can set name of element in mix with two dots -->
-		<h1 class="title article__my-name">Title
-		</h1>
+		<!-- You can set name of element in mix with colon -->
+		<div class="title article__my-name">Title
+		</div>
 
 
 		<!-- Block is mixed with two elements -->
-		<h1 class="title article__title content__title">Title
-		</h1>
+		<div class="title article__title content__title">Title
+		</div>
 
 
 		<!-- Block is mixed with element of parent block -->
 		<div class="news">
-			<div class="news__text">
-				<h1 class="title news__title">Title
-				</h1>
+			<div class="title news__title">Title
+			</div>
+		</div>
+
+		<div class="news">
+			<div class="title news__title">Title
+			</div>
+		</div>
+
+
+		<!-- Also, you can use ampersand & sign as parent block reference -->
+		<div class="news">
+			<div class="title news__title">Title
+			</div>
+			<div class="text news__description">Text
 			</div>
 		</div>
 
 
 		<!-- Block is mixed with element which has modifiers -->
-		<h1 class="title article__title article__title--big article__title--bold">Title
-		</h1>
-
-
-		<!-- Block is mixed with element and contain modifiers for both -->
-		<h1 class="title title--center article__title article__title--big article__title--bold">Title
-		</h1>
-
-
-		<!-- Block is mixed with another block -->
-		<div class="article text">Text
+		<div class="title news__title news__title--bolder news__title--size-m">Title
 		</div>
 
 
-		<!-- Block is mixed with another block which has modifiers -->
-		<div class="article text text--bold text--big">Text
-		</div>
-
-
-		<!-- Block is mixed with two blocks which have modifiers -->
-		<div class="article news news--first text text--bold text--big">Text
-		</div>
-
-
-		<!-- Disable parent -->
-		<div class="header">
-			<div class="grid">
-				<div class="header__logo">Logo
-				</div>
+		<!-- Element is mixed with another element -->
+		<div class="footer">
+			<div class="footer__bottom page__bottom">
 			</div>
 		</div>
 
 
-		<!-- You can set separators directly -->
-		<div class="article article----first content____article">
-			<div class="text text----bolder article____text">
-				<div class="text____mark">Text
+		<!-- Element is mixed with block -->
+		<div class="footer">
+			<div class="footer__bottom grid">
+			</div>
+		</div>
+
+
+		<!-- Block is mixed with another block -->
+		<div class="article news">Content
+		</div>
+
+
+		<!-- Block is mixed with another block which has modifiers -->
+		<div class="article news news--first">Content
+		</div>
+
+
+		<!-- Block is mixed with two blocks which have modifiers -->
+		<div class="article news news--first fixed fixed--active">Content
+		</div>
+
+
+		<!-- Also, you can set separators in data argument 'modifier|element' and ignore global settings -->
+		<div class="news news---first content___news">
+			<div class="text text---bolder news___text">Text
+			</div>
+		</div>
+
+
+		<!-- You can get current block name -->
+		<div class="nav">
+			<div class="nav__item">Item of nav
+				<div class="myblock">
+					<div class="myblock__item">Item of myblock
+					</div>
 				</div>
 			</div>
 		</div>
@@ -166,8 +222,10 @@
 
 
 		<!-- Before parse callback -->
-		<input class="input input--search"/>
-		<input class="input input--default"/>
+		<div class="input input--search">
+		</div>
+		<div class="input input--default">
+		</div>
 
 
 
@@ -252,12 +310,12 @@
 		</div>
 
 		<div class="block">
-			<div class="block__element">{0}
+			<div class="page__element">{0}
 			</div>
 		</div>
 
-		<div class="block page__block">
-			<div class="block__element">{1}
+		<div class="block page page__block">
+			<div class="block__element block block__element">{1}
 			</div>
 		</div>
 
@@ -271,8 +329,8 @@
 			</div>
 		</div>
 
-		<div class="block page__block">
-			<div class="block__element">{true}
+		<div class="block page page__block">
+			<div class="block__element block block__element">{true}
 			</div>
 		</div>
 

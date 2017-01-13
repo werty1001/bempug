@@ -6,7 +6,8 @@ include ../index
 -
 	BEMPUG.modifier = '--';
 	BEMPUG.element = '__';
-	BEMPUG.tagByName = {html: 'html'};
+
+	BEMPUG.tagByName = {list: 'ul', form: 'form', fields: 'fieldset'};
 
 	BEMPUG.beforeParse[ 'input' ] = function( block ) {
 		
@@ -25,7 +26,7 @@ include ../index
 	};
 
 doctype
-+b('html', 'no-js')(lang='en')
++b('html', 'no-js', 'html')(lang='en')
 	head
 		meta(charset='utf-8')
 		meta(http-equiv='X-UA-Compatible' content='IE=edge')
@@ -45,15 +46,35 @@ doctype
 		// Simple example 
 
 		+b('block')
-			+e('text') Element text
+			+e('element') Text
 
 
 		= n + n
-		// Element depends on parent block, but you can set it directly 
+		// You can disable parent mode and element will ignore this block 
 
-		+b('block')
-			+e('text') Element text
-			+e('text', {p: 'content'}) Element text
+		+b('header')
+			+b('grid', {p: false})
+				+e('logo') Logo
+
+		= n
+
+		+b('header')
+			+b('grid', {p:0})
+				+e('logo') Logo
+
+
+		= n + n
+		// Element depends on parent block 
+
+		+b('content')
+			+e('layout') Content
+
+
+		= n + n
+		// You can set element directly 
+
+		+b('content')
+			+e('layout', {p: 'page'}) Content
 
 
 		= n + n
@@ -64,16 +85,16 @@ doctype
 
 
 		= n + n
-		// Block and element have many modifiers 
+		// Block and element have more than one modifier 
 
 		+b('alert', 'success.active')
-			+e('text', 'bolder.italic') Success text
+			+e('text', 'bolder.italic') Success
 
 
 		= n + n
-		// When block is mixed with element or another block 
+		// Also, you can set modifiers in data argument 
 
-		+b('alert', {m: 'success.active', e: 'content'}) Success
+		+b('alert', {m: 'success.active'}) Success
 
 
 		= n + n
@@ -89,7 +110,7 @@ doctype
 
 
 		= n + n
-		// Sometimes mixin can be smart and tag depends on parent block or attributes 
+		// Sometimes mixin can be smart and tag depends on parent or attributes 
 
 		+b('list', {t: 'ul'})
 			+e('item') My item 1
@@ -103,75 +124,111 @@ doctype
 
 
 		= n + n
-		// Block is mixed with element 
+		// Also, you can use tagByName global option for set default tag by name 
 
-		+b('title', {e: 'article', t: 'h1'}) Title
+		+b('list')
+			+e('item') Item
+			+e('item') Item
+
+		= n
+
+		+b('form')
+			+e('fields') Fields
 
 
 		= n + n
-		// You can set name of element in mix with two dots 
+		// Block is mixed with element 
 
-		+b('title', {e: 'article:my-name', t: 'h1'}) Title
+		+b('title', {e: 'article'}) Title
+
+
+		= n + n
+		// You can set name of element in mix with colon 
+
+		+b('title', {e: 'article:my-name'}) Title
 
 
 		= n + n
 		// Block is mixed with two elements 
 
-		+b('title', {e: ['article', 'content'], t: 'h1'}) Title
+		+b('title', {e: ['article', 'content']}) Title
 
 
 		= n + n
 		// Block is mixed with element of parent block 
 
 		+b('news')
-			+e('text')
-				+b('title', {e: true, t: 'h1'}) Title
+			+b('title', {e: true}) Title
+
+		= n
+
+		+b('news')
+			+b('title', {e:1}) Title
+
+
+		= n + n
+		// Also, you can use ampersand & sign as parent block reference 
+
+		+b('news')
+			+b('title', {e: '&'}) Title
+			+b('text', {e: '&:description'}) Text
 
 
 		= n + n
 		// Block is mixed with element which has modifiers 
 
-		+b('title', {e: 'article|big.bold', t: 'h1'}) Title
+		+b('title', {e: 'news|bolder.size-m'}) Title
 
 
 		= n + n
-		// Block is mixed with element and contain modifiers for both 
+		// Element is mixed with another element 
 
-		+b('title', {m: 'center', e: 'article|big.bold', t: 'h1'}) Title
+		+b( 'footer' )
+			+e( 'bottom', {e: 'page'} )
+
+
+		= n + n
+		// Element is mixed with block 
+
+		+b( 'footer' )
+			+e( 'bottom', {b: 'grid'} )
 
 
 		= n + n
 		// Block is mixed with another block 
 
-		+b('article', {b: 'text'}) Text
+		+b('article', {b: 'news'}) Content
 
 
 		= n + n
 		// Block is mixed with another block which has modifiers 
 
-		+b('article', {b: 'text|bold.big'}) Text
+		+b('article', {b: 'news|first'}) Content
 
 
 		= n + n
 		// Block is mixed with two blocks which have modifiers 
 
-		+b('article', {b: ['news|first','text|bold.big']}) Text
+		+b('article', {b: ['news|first','fixed|active']}) Content
 
 
 		= n + n
-		// Disable parent 
+		// Also, you can set separators in data argument 'modifier|element' and ignore global settings 
 
-		+b('header')
-			+b('grid', {p: false})
-				+e('logo') Logo
+		+b('news', {e: 'content', m: 'first', s: '---|___' })
+			+b('text', {e: true, m: 'bolder'}) Text
 
 
 		= n + n
-		// You can set separators directly 
+		// You can get current block name 
 
-		+b('article', {e: 'content', m: 'first', s: '----|____' })
-			+b('text', {e: true, m: 'bolder'})
-				+e('mark') Text
+		+b('nav')
+			+e('item')= 'Item of ' + BEMPUG.getCurrentBlock()
+
+				+b('myblock')
+					+e('item')= 'Item of ' + BEMPUG.getCurrentBlock()
+
+
 
 
 		= n + n

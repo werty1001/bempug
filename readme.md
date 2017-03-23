@@ -27,7 +27,9 @@ include ../../node_modules/bempug/index
 ---
 
 ### Mixins
+
 Block mixin:
+
 ```Pug
 +b( name, data, tag )
 ```
@@ -45,7 +47,9 @@ Block mixin:
 > If data argument is String it will be a modifier.
 
 <br>
+
 Element mixin:
+
 ```Pug
 +e( name, data, tag )
 ```

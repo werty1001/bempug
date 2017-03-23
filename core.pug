@@ -1,9 +1,9 @@
 -
 	const BEMPUG = {
 
-		// bempug by werty1001 [yoobe.ru]
+		// bempug by Oleg Krylov [olegkrylov.pro]
 
-		version: '1.1.0',
+		version: '1.1.1',
 
 		tree: [],
 
@@ -20,6 +20,10 @@
 		selfClosingTags: ['img','input','hr','br','wbr','source','area','col','colgroup'],
 
 		forSpanTags: ['abbr','a','b','bdo','cite','dfn','em','i','kbd','q','s','span','sub','sup','samp','small','strong','u','var','mark','p','h1','h2','h3','h4','h5','h6','time','bdi','button','li','label'],
+
+		isExternal: function( str ) {
+			return /^(?:https?\:)?\/\//i.test( str );
+		},
 
 		isObject: function( obj ) {
 			return ( typeof obj === 'object' && obj !== null && ! Array.isArray( obj ) ) ? true : false;
@@ -157,9 +161,10 @@
 						if ( isElementMix ) {
 
 							var elementOf = name.split( ':' )[0];
-							var elementName = name.split( ':' )[1] || this.name;
+							var elementName = name.split( ':' )[1];
 
-							if ( this.type === 'element' ) elementName = elementName.split( this.sep.element )[1];
+							if ( ! elementName )
+								elementName = this.type === 'element' ? this.name.split( this.sep.element )[1] : this.name;
 
 							if ( ! ( BEMPUG.isString( elementOf ) && BEMPUG.isString( elementName ) ) ) return;
 
@@ -181,25 +186,27 @@
 
 			this.__proto__ = BEMPUG.blockProto;
 
+			this.name = name;
+
 			this.data = BEMPUG.isObject( data ) ? data : {m: data};
 
 			this.attributes = attr;
 
-			this.type = !!this.attributes.isElement ? 'element' : 'block' + ( ( this.data.p === false || this.data.p === 0 ) ? 'Off' : '' );
+			this.isElement = !!this.attributes.isElement;
 
-			if ( this.type === 'element' ) delete this.attributes.isElement;
+			this.parent = BEMPUG.getCurrentParent();
+
+			if ( this.isElement ) delete this.attributes.isElement;
 
 			if ( typeof this.data.t === 'undefined' ) this.data.t = tag;
 
 			if ( typeof BEMPUG.beforeParse[ name ] === 'function' ) BEMPUG.beforeParse[ name ]( this );
 
-			this.name = name;
+			this.type = this.isElement ? 'element' : 'block' + ( ( this.data.p === false || this.data.p === 0 ) ? 'Off' : '' );
 
 			this.sep = {};
 
 			this.classes = [];
-
-			this.parent = BEMPUG.getCurrentParent();
 
 			this.identifyTag( this.data.t, this.name, this.attributes );
 

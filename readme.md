@@ -1,8 +1,10 @@
+# BemPug
+
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/werty1001/bempug/master/LICENSE) [![npm](https://img.shields.io/npm/v/bempug.svg?style=flat-square)](https://www.npmjs.com/package/bempug) [![npm](https://img.shields.io/npm/dt/bempug.svg?style=flat-square)](https://www.npmjs.com/package/bempug)
 
-# BemPug — some pug / jade mixins for BEM
+Simple mixins to help you writing code on [BEM](https://en.bem.info/) methodology in [pug](https://pugjs.org/) or jade projects.
 
-Simple mixins to help you writing code on [BEM](https://en.bem.info/) methodology in [pug](https://pugjs.org/) / jade projects.
+> You like BEM? Try [BemGo](https://github.com/werty1001/bemgo) — starter kit for developing BEM apps using Gulp and Webpack.
 
 ---
 
@@ -15,9 +17,9 @@ Simple mixins to help you writing code on [BEM](https://en.bem.info/) methodolog
 
 Install from npm:
 ```sh
-npm i bempug --save-dev
+npm i bempug -D
 ```
-Then include `index` file to your pug / jade project:
+Then include `index` file to your pug or jade project:
 ```Jade
 include ../../node_modules/bempug/index
 ```
@@ -25,12 +27,10 @@ include ../../node_modules/bempug/index
 ---
 
 ### Mixins
-
-```Jade
-//- Block mixin
-+b(name, data, tag)
+Block mixin:
+```Pug
++b( name, data, tag )
 ```
-> If data argument is String it will be modifier.
 
 - **name** `String`
 - **data** `String or Object`
@@ -42,11 +42,13 @@ include ../../node_modules/bempug/index
   - **data.s** `String` — block separators
 - **tag** `String`
 
-```Jade
-//- Element mixin
-+e(name, data, tag)
+> If data argument is String it will be a modifier.
+
+<br>
+Element mixin:
+```Pug
++e( name, data, tag )
 ```
-> If data argument is String it will be modifier.
 
 - **name** `String`
 - **data** `String or Object`
@@ -58,6 +60,8 @@ include ../../node_modules/bempug/index
   - **data.s** `String` — element separators
 - **tag** `String`
 
+> If data argument is String it will be a modifier.
+
 ---
 
 ### Examples
@@ -67,9 +71,9 @@ include ../../node_modules/bempug/index
 
 ### Block
 Simple example:
-```Jade
-+b('block')
-    +e('element') Text
+```Pug
++b( 'block' )
+    +e( 'element' ) Text
 ```
 ```HTML
 <div class="block">
@@ -77,11 +81,11 @@ Simple example:
 </div>
 ```
 
-You can disable parent mode and element will ignore this block:
-```Jade
-+b('header')
-    +b('grid', {p: false}) // or short {p:0}
-        +e('logo') Logo
+You can to disable parent mode and element will ignore this block:
+```Pug
++b( 'header' )
+    +b( 'grid', {p: false} ) // or short {p:0}
+        +e( 'logo' ) Logo
 ```
 ```HTML
 <div class="header">
@@ -96,19 +100,19 @@ You can disable parent mode and element will ignore this block:
 ### Element
 
 Element depends on parent block:
-```Jade
-+b('content')
-    +e('layout') Content
+```Pug
++b( 'content' )
+    +e( 'layout' ) Content
 ```
 ```HTML
 <div class="content">
     <div class="content__layout">Content</div>
 </div>
 ```
-You can set element directly:
-```Jade
-+b('content')
-    +e('layout', {p: 'page'}) Content
+You can set parent block for element directly:
+```Pug
++b( 'content' )
+    +e( 'layout', {p: 'page'} ) Content
 ```
 ```HTML
 <div class="content">
@@ -121,9 +125,9 @@ You can set element directly:
 ### Modifier
 
 Block and element have modifier:
-```Jade
-+b('alert', 'success')
-    +e('text', 'bolder') Success
+```Pug
++b( 'alert', 'success' )
+    +e( 'text', 'bolder' ) Success
 ```
 ```HTML
 <div class="alert alert--success">
@@ -132,9 +136,9 @@ Block and element have modifier:
 ```
 
 Block and element have more than one modifier:
-```Jade
-+b('alert', 'success.active')
-    +e('text', 'bolder.italic') Success
+```Pug
++b( 'alert', 'success.active' )
+    +e( 'text', 'bolder.italic' ) Success
 ```
 ```HTML
 <div class="alert alert--success alert--active">
@@ -142,9 +146,9 @@ Block and element have more than one modifier:
 </div>
 ```
 
-Also, you can set modifiers in data argument:
-```Jade
-+b('alert', {m: 'success.active'}) Success
+Also, you can set modifiers in `Object`:
+```Pug
++b( 'alert', {m: 'success.active'} ) Success
 ```
 ```HTML
 <div class="alert alert--success alert--active">Success</div>
@@ -155,12 +159,14 @@ Also, you can set modifiers in data argument:
 ### Tag
 
 Default tag is **div**, but you can set it directly:
-```Jade
-+b('news', {}, 'article')
-    +e('title', {}, 'h1') Title
+```Pug
++b( 'news', {}, 'article' )
+    +e( 'title', {}, 'h1' ) Title
 
-+b('news', {t: 'article'}) // Or in data Object
-    +e('title', {t: 'h1'}) Title
+// Or in data Object
+
++b( 'news', {t: 'article'} )
+    +e( 'title', {t: 'h1'} ) Title
 ```
 ```HTML
 <article class="news">
@@ -169,14 +175,14 @@ Default tag is **div**, but you can set it directly:
 ```
 
 Sometimes mixin can be smart and tag depends on parent or attributes:
-```Jade
-+b('list', {t: 'ul'})
-    +e('item') My item 1
-    +e('item') My item 2
-    +e('item') My item 3
+```Pug
++b( 'list', {t: 'ul'} )
+    +e( 'item' ) My item 1
+    +e( 'item' ) My item 2
+    +e( 'item' ) My item 3
 
-+b('link')(href='https://www.npmjs.com/package/bempug')
-    +b('text') My text
++b( 'link' )(href='https://www.npmjs.com/package/bempug')
+    +b( 'text' ) My text
 ```
 ```HTML
 <ul class="list">
@@ -192,15 +198,15 @@ Sometimes mixin can be smart and tag depends on parent or attributes:
 
 Also, you can use `tagByName` global option for set default tag by name:
 
-```Jade
+```Pug
 - BEMPUG.tagByName = {list: 'ul', form: 'form', fields: 'fieldset'};
 
-+b('list')
-    +e('item') Item
-    +e('item') Item
++b( 'list' )
+    +e( 'item' ) Item
+    +e( 'item' ) Item
     
-+b('form')
-    +e('fields') Fields
++b( 'form' )
+    +e( 'fields' ) Fields
 ```
 ```HTML
 <ul class="list">
@@ -219,33 +225,33 @@ Also, you can use `tagByName` global option for set default tag by name:
 
 Block is mixed with element:
 ```Jade
-+b('title', {e: 'article'}) Title
++b( 'title', {e: 'article'} ) Title
 ```
 ```HTML
 <div class="title article__title">Title</div>
 ```
 
 You can set name of element in mix with colon:
-```Jade
-+b('title', {e: 'article:my-name'}) Title
+```Pug
++b( 'title', {e: 'article:my-name'} ) Title
 ```
 ```HTML
 <div class="title article__my-name">Title</div>
 ```
 
 Block is mixed with two elements:
-```Jade
-+b('title', {e: ['article', 'content']}) Title
+```Pug
++b( 'title', {e: ['article', 'content']} ) Title
 ```
 ```HTML
 <div class="title article__title content__title">Title</div>
 ```
 
 Also, you can use ampersand `&` sign as parent block reference:
-```Jade
-+b('news')
-    +b('title', {e: '&'}) Title
-    +b('text', {e: '&:description'}) Text
+```Pug
++b( 'news' )
+    +b( 'title', {e: '&'} ) Title
+    +b( 'text', {e: '&:description'} ) Text
 ```
 ```HTML
 <div class="news">
@@ -255,15 +261,15 @@ Also, you can use ampersand `&` sign as parent block reference:
 ```
 
 Block is mixed with element which has modifiers:
-```Jade
-+b('title', {e: 'news|bolder.size-m'}) Title
+```Pug
++b( 'title', {e: 'news|bolder.size-m'} ) Title
 ```
 ```HTML
 <div class="title news__title news__title--bolder news__title--size-m">Title</div>
 ```
 
 Element is mixed with another element:
-```Jade
+```Pug
 +b( 'footer' )
     +e( 'bottom', {e: 'page'} )
 ```
@@ -274,7 +280,7 @@ Element is mixed with another element:
 ```
 
 Element is mixed with block:
-```Jade
+```Pug
 +b( 'footer' )
     +e( 'bottom', {b: 'grid'} )
 ```
@@ -285,24 +291,24 @@ Element is mixed with block:
 ```
 
 Block is mixed with another block:
-```Jade
-+b('article', {b: 'news'}) Content
+```Pug
++b( 'article', {b: 'news'} ) Content
 ```
 ```HTML
 <div class="article news">Content</div>
 ```
 
 Block is mixed with another block which has modifiers:
-```Jade
-+b('article', {b: 'news|first'}) Content
+```Pug
++b( 'article', {b: 'news|first'} ) Content
 ```
 ```HTML
 <div class="article news news--first">Content</div>
 ```
 
 Block is mixed with two blocks which have modifiers:
-```Jade
-+b('article', {b: ['news|first','fixed|active']}) Content
+```Pug
++b( 'article', {b: ['news|first','fixed|active']} ) Content
 ```
 ```HTML
 <div class="article news news--first fixed fixed--active">Content</div>
@@ -312,12 +318,12 @@ Block is mixed with two blocks which have modifiers:
 
 ### Separators
 You can change global separators:
-```Jade
+```Pug
 - BEMPUG.modifier = '_';
 - BEMPUG.element = '__';
 
-+b('alert', 'success.active')
-    +e('text', 'bolder.italic') Success
++b( 'alert', 'success.active' )
+    +e( 'text', 'bolder.italic' ) Success
 ```
 ```HTML
 <div class="alert alert_success alert_active">
@@ -325,10 +331,10 @@ You can change global separators:
 </div>
 ```
 
-Also, you can set separators in data argument `'modifier|element'` and ignore global settings:
-```Jade
-+b('news', {e: 'content', m: 'first', s: '---|___' })
-    +b('text', {e: true, m: 'bolder'}) Text
+Also, you can set separators for each block and ignore global settings `'modifier|element'`:
+```Pug
++b( 'news', {e: 'content', m: 'first', s: '---|___' } )
+    +b( 'text', {e: true, m: 'bolder'} ) Text
 ```
 ```HTML
 <div class="news news---first content___news">
@@ -345,11 +351,11 @@ Also, you can set separators in data argument `'modifier|element'` and ignore gl
 
 ### Get current block
 You can get current block name:
-```Jade
-+b('nav')
-    +e('item')
+```Pug
++b( 'nav' )
+    +e( 'item' )
         - console.log( BEMPUG.getCurrentBlock() ); // 'nav'
-        +b('img')
+        +b( 'img' )
             - console.log( BEMPUG.getCurrentBlock() ); // 'img'
 ```
 
@@ -357,8 +363,8 @@ You can get current block name:
 
 ### Get current parent
 You can get current parent `Object`:
-```Jade
-+b('html', 'no-js', 'html')(lang='en')
+```Pug
++b( 'html', 'no-js', 'html' )(lang='en')
     - console.log( BEMPUG.getCurrentParent() );
 ```
 ```JS
@@ -376,14 +382,15 @@ You can get current parent `Object`:
 
 ### Callbacks
 You can set `beforeParse` callback:
-```Jade
+```Pug
 - BEMPUG.beforeParse[ 'input' ] = function( block ) {
+
     if ( typeof block.data.m === 'undefined' ) block.data.m = 'default';
 }
 
-+b('input', {m: 'search'}) // Have modifier 'search'
++b( 'input', {m: 'search'} ) // Have modifier 'search'
 
-+b('input') // No modifier, but we set modifier 'default' by callback
++b( 'input' ) // No modifier, but we set modifier 'default' by callback
 ```
 ```HTML
 <input class="input input--search">
@@ -391,15 +398,16 @@ You can set `beforeParse` callback:
 ```
 
 You can set `afterParse` callback:
-```Jade
+```Pug
 - BEMPUG.afterParse[ 'page' ] = function( block ) {
+
     block.setTag( 'body' );
     block.addModifier( 'test' );
     block.attributes.itemscope = true;
     block.attributes.itemtype = 'http://schema.org/WebPage';
 }
 
-+b('page') My page
++b( 'page' ) My page
 ```
 ```HTML
 <body class="page page--test" itemscope itemtype="http://schema.org/WebPage">My page</body>
@@ -409,25 +417,25 @@ You can set `afterParse` callback:
 
 ### Changelog
 
-#### 1.1.0
-> **Add**: support ampersand sign for mix
+#### 1.1.1
+* **Fixed**: disable parent mode not work in cb
+* **Fixed**: name of element in mix with another element
 
-> **Add**: support mix element with blocks and another elements
+#### 1.1.0
+* **Add**: ampersand sign for mix
+* **Add**: mix element with blocks and another elements
 
 #### 1.0.2
-> **Add**: some global helpers
-
-> **Add**: before / after parse callback
-
-> **Fixed**: block and element separators work for any descendant
-
-> **Fixed**: default tag depends on parent tag for any descendant
+* **Add**: some global helpers
+* **Add**: before / after parse callback
+* **Fixed**: block and element separators work for any descendant
+* **Fixed**: default tag depends on parent tag for any descendant
 
 #### 1.0.1
-> **Add**: disable parent mode for blocks
+* **Add**: disable parent mode for blocks
 
 #### 1.0.0
-> **Release version**
+* **Release version**
 
 ---
 

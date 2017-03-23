@@ -1,7 +1,7 @@
 {
   "name": "bempug",
-  "version": "1.1.0",
-  "description": "Some pug / jade mixins for BEM",
+  "version": "1.1.1",
+  "description": "Simple mixins to help you writing code on BEM methodology in pug or jade projects.",
   "keywords": [
     "pug",
     "jade",
@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/werty1001/bempug.git"
   },
-  "author": "werty1001",
+  "author": "Oleg Krylov",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/werty1001/bempug/issues"

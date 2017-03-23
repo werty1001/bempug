@@ -43,8 +43,8 @@
 			return start + ( ( selfClosing.indexOf( tag ) === -1 ) ? content.trim() : content ) + end;
 		});
 
-		require( 'fs' ).writeFileSync( __dirname + '/page.pug.html', PugCompiled + '<!-- Pug v2.0.0-beta6 -->', 'utf8' );
-		require( 'fs' ).writeFileSync( __dirname + '/page.fix.html', fixCompiled + '<!-- Pug v2.0.0-beta6 -->', 'utf8' );
+		require( 'fs' ).writeFileSync( __dirname + '/page.pug.html', PugCompiled + '<!-- pug@2.0.0-beta11 -->', 'utf8' );
+		require( 'fs' ).writeFileSync( __dirname + '/page.fix.html', fixCompiled + '<!-- pug@2.0.0-beta11 -->', 'utf8' );
 
 	}
 
@@ -52,7 +52,7 @@
 
 		let JadeCompiled = jade.renderFile( file, options );
 
-		require( 'fs' ).writeFileSync( __dirname + '/page.jade.html', JadeCompiled + '<!-- Jade v1.11.0 -->', 'utf8' );
+		require( 'fs' ).writeFileSync( __dirname + '/page.jade.html', JadeCompiled + '<!-- jade@1.11.0 -->', 'utf8' );
 
 	}
 

@@ -4,6 +4,8 @@
 
 Simple mixins to help you writing code on [BEM](https://en.bem.info/) methodology in [pug](https://pugjs.org/) or jade projects.
 
+---
+
 > You like BEM? Try [BemGo](https://github.com/werty1001/bemgo) — starter kit for developing BEM apps using Gulp and Webpack.
 
 ---
